@@ -1,10 +1,25 @@
-(use '(incanter core charts excel))
+(use '(incanter core charts excel io))
+(require '[clj-time.format :as f])
+(require '[clj-time.coerce :as c])
 
-(with-data (read-xls "http://incanter.org/data/aus-airline-passengers.xls")
-           (view $data)
-           (let [to-millis (fn [dates] (map #(.getTime %) dates))]
-             (view (time-series-plot (to-millis ($ :date)) ($ :passengers))))
-           )
+(def fr (f/formatter "dd/MM/yy"))
+
+
+(def borsa (read-dataset "/Users/halit/Downloads/fiyatendXU100.csv" :delim \; :header true))
+
+(view borsa)
+
+(def borsa-with-milis
+  (col-names
+    (conj-cols
+      ($ :CLOSE borsa)
+      ($map #(c/to-long (f/parse fr %)) :DATE borsa))
+    [:DATE :CLOSE]))
+
+
+(view (time-series-plot :DATE :CLOSE :x-label "DATE" :y-label "CLOSE" :data mod-data :points true))
+
+
 
 
 

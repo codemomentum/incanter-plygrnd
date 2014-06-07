@@ -7,4 +7,5 @@
                  [incanter/incanter-core "1.5.4"]
                  [incanter/incanter-io "1.5.4"]
                  [incanter/incanter-charts "1.5.4"]
-                 [incanter/incanter-excel "1.5.4"]])
+                 [incanter/incanter-excel "1.5.4"]
+                 [clj-time "0.7.0"]])

@@ -6,12 +6,20 @@
             [incanter.core :as inct]
             [incanter.stats :as st]))
 
+(require '[clatrix.core :as cl]
+         '[clojure.core.matrix :as m]
+         '[clojure.core.matrix.operators :as M]
+         '[incanter.charts :as charts]
+         '[incanter.core :as inct]
+         '[incanter.stats :as st])
+
 (def A (cl/matrix [[0 1 2] [3 4 5]]))
 (def B (cl/matrix [[0 0 0] [0 0 0]]))
 (def C (cl/matrix [[1 1 1] [1 1 1]]))
 (def D (cl/matrix [[1 1 1] [1 1 1] [1 1 1]]))
 (def E (cl/matrix [[0 1 2] [3 4 5] [6 7 8]]))
 
+A
 (m/pm A)
 
 
@@ -22,6 +30,8 @@
   (let [repeater #(repeat n %)]
     (cl/matrix (-> e repeater repeater))))
 
+(square-mat 3 2)
+
 (defn id-mat
   "Creates an identity matrix of n x n size"
   [n]
@@ -31,23 +41,28 @@
                      (if (= i j) 1 n))]
     (cl/map-indexed identity-f init)))
 
+(id-mat 3)
+
 (defn lmatrix [n]
   (m/compute-matrix :clatrix [n (+ n 2)]
                     (fn [i j] ({0 -1, 1 2, 2 -1} (- j i) 0))))
+
+(lmatrix 3)
 
 
 
 ;linear regression
 (def X (cl/matrix [8.401 14.475 13.396 12.127 5.044
                    8.339 15.692 17.108 9.253 12.029]))
+X
 (def Y (cl/matrix [-1.57 2.32 0.424 0.814 -2.3
                    0.01 1.954 2.296 -0.635 0.328]))
-
+Y
 
 (def linear-samp-scatter
   (charts/scatter-plot X Y))
 
-(defn plot-scatter []
+(defn plot-scatter
   (inct/view linear-samp-scatter))
 
 (plot-scatter)
@@ -57,13 +72,16 @@
 (def samp-linear-model
   (st/linear-model Y X))
 
+samp-linear-model
+
 (:coefs samp-linear-model)
 (:sse samp-linear-model)
 (:r-square samp-linear-model)
 
+
 (defn plot-model [] (inct/view
-                      (charts/add-lines samp-scatter-plot
-                                        X (:fitted linear-samp-scatter))))
+                      (charts/add-lines linear-samp-scatter
+                                        X (:fitted samp-linear-model))))
 
 (plot-model)
 

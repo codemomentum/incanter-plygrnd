@@ -11,7 +11,8 @@
          '[clojure.core.matrix.operators :as M]
          '[incanter.charts :as charts]
          '[incanter.core :as inct]
-         '[incanter.stats :as st])
+         '[incanter.stats :as st]
+         '[clojure.string :as string])
 
 (def A (cl/matrix [[0 1 2] [3 4 5]]))
 (def B (cl/matrix [[0 0 0] [0 0 0]]))
@@ -60,17 +61,17 @@ X
                    0.01 1.954 2.296 -0.635 0.328 5.444]))
 Y
 
-(def linear-samp-scatter
+(defn linear-samp-scatter [X Y]
   (charts/scatter-plot X Y))
 
-(defn plot-scatter []
-  (inct/view linear-samp-scatter))
+(defn plot-scatter [X Y]
+  (inct/view (linear-samp-scatter X Y)))
 
-(plot-scatter)
+(plot-scatter X Y)
 ;view humidity, rainfall plot
 
 
-(def samp-linear-model
+(defn samp-linear-model [Y X]
   (st/linear-model Y X))
 
 samp-linear-model
@@ -80,11 +81,11 @@ samp-linear-model
 (:r-square samp-linear-model)
 
 
-(defn plot-model [] (inct/view
-                      (charts/add-lines linear-samp-scatter
-                                        X (:fitted samp-linear-model))))
+(defn plot-model [X Y] (inct/view
+                      (charts/add-lines (linear-samp-scatter X Y)
+                                        X (:fitted (samp-linear-model Y X)))))
 
-(plot-model)
+(plot-model X Y)
 
 
 ;simpilifed GD
@@ -99,6 +100,10 @@ samp-linear-model
       (if (< dx gradient-descent-precision)
         x-new
         (recur x-new)))))
+
+
+
+
 
 
 

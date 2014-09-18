@@ -1,3 +1,4 @@
+"http://vincentarelbundock.github.io/Rdatasets/datasets.html"
 "no",price,lotsize,bedrooms,bathrms,stories,driveway,recroom,fullbase,gashw,airco,garagepl,prefarea
 1,42000,5850,3,1,2,yes,no,yes,no,no,1,no
 2,38500,4000,2,1,1,yes,no,no,no,no,0,no

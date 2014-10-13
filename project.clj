@@ -24,6 +24,9 @@
 
                             [org.clojure/clojurescript "0.0-2371"]
 
+                            ;mcda
+                            [me.raynes/fs "1.4.4"]
+
                             ]
 
             :plugins [[lein-cljsbuild "1.0.3"]]
@@ -35,6 +38,7 @@
                            :compiler     {:pretty-printer true,
                                           :output-to      "www/js/main.js",
                                           :optimizations  :whitespace
-                                          :source-map true}}]}
+                                          :source-map     true}}]}
 
+            :profiles {:dev {:plugins [[com.cemerick/austin "0.1.5"]]}}
             )

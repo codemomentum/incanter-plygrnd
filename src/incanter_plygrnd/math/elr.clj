@@ -1,6 +1,9 @@
 (ns incanter-plygrnd.math.elr)
 
 
+(defmacro <> [stmnt]
+  (try stmnt (catch Throwable t (.printStackTrace t))))
+
 "1 - multiples od 3 and 5"
 (comment
   (reduce + (filter #(or (= 0 (mod % 3)) (= 0 (mod % 5))) (range 10)))
@@ -97,18 +100,21 @@ highest exponent for 2, 3 and all other primes
 
   ;(require '[clojure.core.async :as async :refer :all :exclude [map into reduce merge partition partition-by take]])
   ;
-  ;(defn factor? [x y]
-  ;  (zero? (mod y x)))
-  ;
-  ;(defn get-primes [limit]
-  ;  (let [primes (chan)
-  ;        numbers (to-chan (range 2 limit))]
-  ;    (go-loop [ch numbers]
-  ;             (when-let [prime (<! ch)]
-  ;               (>! primes prime)
-  ;               (recur (remove< (partial factor? prime) ch)))
-  ;             (close! primes))
-  ;    primes))
+  (defn factor? [x y]
+    ;(println x y)
+    (zero? (mod y x)))
+
+  (defn getp [limit]
+    (let [primes (atom nil)
+          numbers (range 2 limit)]
+      (loop [i numbers]
+        (when-let [prime (first i)]
+          (swap! primes conj prime)
+          (recur (remove (partial factor? prime) i))
+          ))
+      @primes))
+
+  (getp 2020)
 
   (defn primes3 [max]
     (let [enqueue (fn [sieve n factor]

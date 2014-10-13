@@ -1,15 +1,11 @@
 (ns network-six.force)
 
+(comment
+  (cemerick.austin.repls/exec
+    :exec-cmds ["open" "-ga" "/Applications/Google Chrome.app"])
+  )
+
 (js/alert "Hello from ClojureScript!")
 
 (defonce app-state (atom {:text "Hello Clojurescript!"}))
 
-(defn main []
-  (om/root
-    (fn [app owner]
-      (reify
-        om/IRender
-        (render [_]
-          (dom/h1 {{#not-om-tools?}}nil {{/not-om-tools?}}(:text app)))))
-app-state
-{:target (. js/document (getElementById "app"))}))

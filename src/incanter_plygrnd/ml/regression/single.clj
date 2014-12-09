@@ -1,32 +1,28 @@
 (ns incanter-plygrnd.ml.regression.single
-  (:require [clatrix.core :as cl]
-            [clojure.core.matrix :as m]
-            [clojure.core.matrix.operators :as M]
-            [incanter.charts :as charts]
+  (:require [incanter.charts :as charts]
             [incanter.core :as inct]
             [incanter.stats :as st]
             [clojure.string :as string]))
 
-(defn linear-samp-scatter [X Y]
+(defn make-scatter-plot-chart [X Y]
   (charts/scatter-plot X Y))
 
-(defn plot-scatter [X Y]
-  (inct/view (linear-samp-scatter X Y)))
+(defn display [X Y]
+  (inct/view (make-scatter-plot-chart X Y)))
 
-(defn samp-linear-model [Y X]
+(defn ols-linear-model [Y X]
   (st/linear-model Y X))
 
 (defn plot-model [X Y] (inct/view
-                         (charts/add-lines (linear-samp-scatter X Y)
-                                           X (:fitted (samp-linear-model Y X)))))
+                         (charts/add-lines (make-scatter-plot-chart X Y)
+                                           X (:fitted (ols-linear-model Y X)))))
 
-(def XX (atom []))
-(def YY (atom []))
+(def X (atom []))
+(def Y (atom []))
 
 (defn parse-single-tsv-line
   "read the entire tsv line and return a parsed data structure."
   [^String line]
-  ;"Age","Gender","Impressions","Clicks","Signed_In"
   (let [content (string/split line #"\,")
         content-count (count content)]
     (if (and (= 13 content-count) (not (.startsWith line "\"")))
@@ -44,15 +40,15 @@
         (pmap #(let [parsed (parse-single-tsv-line %1)]
                 (if-not (nil? parsed)
                   (do
-                    (swap! XX conj (:lotsize parsed))
-                    (swap! YY conj (:price parsed)))))
+                    (swap! X conj (:lotsize parsed))
+                    (swap! Y conj (:price parsed)))))
               lines)))))
 
 (parse-tsv-and-create-matrices! "test-resources/ml/housing.csv")
-(count @XX)
-(count @YY)
+(count @X)
+(count @Y)
 
-(plot-scatter @XX @YY)
+(display @X @Y)
 
-(plot-model @XX @YY)
+(plot-model @X @Y)
 

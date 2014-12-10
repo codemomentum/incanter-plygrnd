@@ -4,19 +4,6 @@
             [incanter.stats :as st]
             [clojure.string :as string]))
 
-(defn make-scatter-plot-chart [X Y]
-  (charts/scatter-plot X Y))
-
-(defn display [X Y]
-  (inct/view (make-scatter-plot-chart X Y)))
-
-(defn ols-linear-model [Y X]
-  (st/linear-model Y X))
-
-(defn plot-model [X Y] (inct/view
-                         (charts/add-lines (make-scatter-plot-chart X Y)
-                                           X (:fitted (ols-linear-model Y X)))))
-
 (def X (atom []))
 (def Y (atom []))
 
@@ -47,6 +34,19 @@
 (parse-tsv-and-create-matrices! "test-resources/ml/housing.csv")
 (count @X)
 (count @Y)
+
+(defn make-scatter-plot-chart [X Y]
+  (charts/scatter-plot X Y))
+
+(defn display [X Y]
+  (inct/view (make-scatter-plot-chart X Y)))
+
+(defn ols-linear-model [Y X]
+  (st/linear-model Y X))
+
+(defn plot-model [X Y] (inct/view
+                         (charts/add-lines (make-scatter-plot-chart X Y)
+                                           X (:fitted (ols-linear-model Y X)))))
 
 (display @X @Y)
 
